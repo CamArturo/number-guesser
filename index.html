@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Camilo Number Guesser</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<div class="wrapper">
+    <header>
+        <h1><span class="emphasis">Number</span> Guesser</h1>
+    </header>
+    <section class="main-content">
+        <div class="main-col">
+            <div class="guess">
+                <form action="">
+                    <div class="guess-range-input">
+                        <p>Set Min and Max Values (optional)</p>
+                        <input id="min-value" type="number" placeholder="Enter min guess value" onchange="">
+                        <input id="max-value" type="number" placeholder="Enter max guess value" onchange="">
+                    </div>
+                    <input id="guess-value" type="number" autofocus="yes" placeholder="Enter your guess" required>
+                    <!--<input id="guess-value" type="number" autofocus="yes" placeholder="Enter your guess" onchange="testGuessValueHasValue()">-->
+                </form>
+            </div>
+            <div class="game-controls">
+                <input type="submit" id="guess-btn" placeholder="Guess">
+                <button id="clear-btn" type="button" onclick="clearOutput()">Clear</button>
+            </div>
+            <section class="output">
+
+            </section>
+            <button id="reset-btn" class="reset-button" type="button">Reset</button>
+        </div>
+    </section>
+</div>
+<script type="text/javascript" src="js/main.js"></script>
+
+</body>
+
+</html>
