@@ -1,42 +1,61 @@
-// var number = getRandomInt(1, 100);
 var firstRun = true;
 var guessValueInput = document.getElementById('guess-value');
 var resetBtn = document.getElementById('reset-btn');
 var clearBtn = document.getElementById('clear-btn');
 var minValueInput = document.getElementById('min-value');
 var maxValueInput = document.getElementById('max-value');
-// var guessValue = document.getElementById('guess-value');
+var minValue;
+var maxValue;
 resetBtn.disabled = true;
 clearBtn.disabled = true;
-var number;
+var randomNumber;
 var previousMinValue;
 var previousMaxValue;
+var victory = false;
+
 
 testGuessInputHasValue();
 
 // Event Listeners
-
-document.getElementById('guess-btn').addEventListener('click', guessFunction);
+document.getElementById('guess-btn').addEventListener('click', userGuess);
 document.getElementById("guess-value").addEventListener("keydown", handleKeyPress);
 
 // Key Press Event
-
-function handleKeyPress (event) {
+function handleKeyPress(event) {
     if (event.keyCode === 13) {
-        guessFunction();
+        userGuess();
     }
 }
 
+function winGame() {
+    console.log('win game called');
+    firstRun = true;
+    clearOutput();
+    victory = true;
+    changeMinValue(victory);
+    changeMaxValue(victory);
+}
 
 // Main Function
+function userGuess() {
 
-function guessFunction() {
     var guessInput = document.getElementById('guess-value').value;
-    changeMinGuessValue();
-    changeMaxGuessValue();
-    var number = getRandomInt(minValueInput, maxValueInput);
-
     guessInput = parseInt(guessInput);
+
+    if (victory === false) {
+        minValue = minValueInput.value;
+        maxValue = maxValueInput.value;
+    } else {
+        minValue = previousMinValue;
+        maxValue = previousMaxValue;
+    }
+
+    if (firstRun) {
+        randomNumber = getRandomInt(minValue, maxValue);
+        console.log('First Run = True and Random Num = ' + randomNumber);
+        changeMinValue();
+        changeMaxValue();
+    }
 
     if (firstRun === true) {
         firstRun = false;
@@ -46,9 +65,6 @@ function guessFunction() {
 
     if (testAcceptableRange(guessInput)) {
 
-        // changeMinGuessValue();
-        // changeMaxGuessValue();
-
         updateDisplay(guessInput)
     }
 }
@@ -56,27 +72,52 @@ function guessFunction() {
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    randomNumber = Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    console.log('random number = ' + randomNumber);
+    return randomNumber;
 }
 
-function changeMinGuessValue() {
-    var minValueElement = document.getElementById('min-value');
-    previousMinValue = minValueElement.value;
-    console.log('previous value = ' + previousMinValue);
-    if (minValueElement.value) {
-        minValueInput = minValueElement.value;
+function changeMinValue(win) {
+    if(victory) {
+        previousMinValue = minValue - 10;
+    } else if (firstRun) {
+        // var minValueInput = document.getElementById('min-value');
+        minValue = parseInt(minValueInput.value);
+    }
+
+    if (win) {
+        previousMinValue = minValue - 10;
     } else {
-        minValueInput = 1;
+        // var minValueElement = document.getElementById('min-value');
+        previousMinValue = minValueInput.value;
+        if (minValueInput.value) {
+            minValue = minValueInput.value;
+        } else {
+            minValue = 1;
+        }
     }
 }
 
-function changeMaxGuessValue() {
-    var maxValueElement = document.getElementById('max-value');
-    previousMaxValue = maxValueElement.value;
-    if (maxValueElement.value) {
-        maxValueInput = maxValueElement.value;
+function changeMaxValue(win) {
+    if (victory) {
+        previousMaxValue = maxValue + 10;
+    } else if (firstRun) {
+        // var maxValueInput = document.getElementById('max-value');
+        maxValue = parseInt(maxValueInput.value);
+    }
+
+    if (win) {
+        previousMaxValue = maxValue - 10;
     } else {
-        maxValueInput = 100;
+        // var maxValueInput = document.getElementById('max-value');
+        previousMaxValue = maxValueInput.value;
+        console.log('previous max value = ' + previousMaxValue);
+
+        if (maxValueInput.value) {
+            maxValue = maxValueInput.value;
+        } else {
+            maxValue = 100;
+        }
     }
 }
 
@@ -100,7 +141,7 @@ function updateDisplay(guessInput) {
     displayGuessFeedback(guessInput);
 }
 
-function displayLastGuess(guessInput) {
+function displayLastGuess() {
     // display your last guess was
     var lastGuess = document.createElement('p');
     lastGuess.className = 'last-guess';
@@ -121,26 +162,25 @@ function displayGuessFeedback(guessInput) {
     // display high or low
     var result = document.createElement('p');
     var resultText = '';
-    if (guessInput > number) {
+    if (guessInput > randomNumber) {
         resultText = document.createTextNode('That is too high');
-    } else if (guessInput < number) {
+    } else if (guessInput < randomNumber) {
         resultText = document.createTextNode('That is too low');
     } else {
         resultText = document.createTextNode('BOOM!');
-        setTimeout(3000);
-        // TODO add 10
-        // changeMinGuessValue();
-        // changeMaxGuessValue();
-        // TODO new random number
-        // TODO add toggle for start of program
-
+        window.setTimeout(3000);
+        winGame();
     }
-    result.className = 'result';
+    if(victory) {
+        result.className = 'boom';
+    } else {
+        result.className = 'result';
+    }
     result.appendChild(resultText);
     document.getElementsByClassName('output')[0].appendChild(result);
 }
 
-function errorMessage(guessInput) {
+function errorMessage() {
     var errorMessage = document.createElement('p');
     var errorText = document.createTextNode('Please enter number between 1 and 100');
     errorMessage.appendChild(errorText);
@@ -148,7 +188,7 @@ function errorMessage(guessInput) {
 }
 
 function testAcceptableRange(guessInput) {
-    if (isNaN(guessInput) || guessInput > maxValueInput || guessInput < minValueInput || typeof guessInput !== 'number') {
+    if (isNaN(guessInput) || guessInput > maxValue || guessInput < minValue || typeof guessInput !== 'number') {
         errorMessage(guessInput);
         return false;
     } else return true;
@@ -158,14 +198,12 @@ function clearOutput() {
     // var child = document.getElementsByClassName("output")[0];
     var child = document.getElementsByClassName('output').item(0);
     child.innerHTML = '';
-    // TODO clear field on every submission
     minValueInput.value = '';
     maxValueInput.value = '';
     guessValueInput.value = '';
     // var form = document.getElementById("myForm");
     // form.reset();
 }
-
 
 
 // document.getElementById('idname').addEventListener('blur', functionName, false);

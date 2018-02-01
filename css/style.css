@@ -79,6 +79,7 @@ button:hover,
     border: 2px solid #d0d2d3;
     width: 100%;
     padding: 0 0 0 1rem;
+    border-radius: 35px;
 }
 
 .guess input::placeholder {
@@ -87,15 +88,12 @@ button:hover,
 }
 
 .guess-range-input input {
-    /*width: calc(50% - 20px);*/
-    width: 50%;
+    width: 40%;
     float: left;
     height: 60px;
+    border-radius: 35px;
+    margin: 0 5% 1rem;
 }
-
-/*#min-value {*/
-/*margin-right: 20px;*/
-/*}*/
 
 .game-controls {
     margin: 50px 0 80px;
@@ -103,14 +101,16 @@ button:hover,
 
 .game-controls button,
 #guess-btn {
-    width: 260px;
+    width: 47.5%;
+    margin: 0 1%;
 }
 
 .game-controls button:first-child {
     margin-right: 34px;
 }
 
-.guess-value {
+.guess-value,
+.boom {
     font-size: 183px;
     color: #ed458b;
     margin: 0;
